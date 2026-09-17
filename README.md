@@ -1,4 +1,6 @@
-# cvevaluator
+<img src=".claude/skills/cv-review/assets/logo.svg" alt="cv-review" width="420">
+
+# cv-review
 
 Una skill per [Claude Code](https://claude.com/claude-code) che valuta curriculum vitae in modo
 **confrontabile**, **tracciabile** e **non discriminatorio**: stessa rubrica per tutti i CV, ogni
@@ -28,7 +30,8 @@ Da qui la procedura è sempre la stessa:
 | 4 | Elenco dei dati protetti presenti nel CV, che non verranno usati | `rubric.md` |
 | 5 | Compilazione della rubrica, tre blocchi | `rubric.md` |
 | 6 | Calcolo punteggi e decisione | `rubric.md` |
-| 7 | Report a sezioni fisse; con più CV anche la tabella di ranking | `report-template.md` |
+| 7 | Report a sezioni fisse in `<nome-cv>-valutazione.md`; con più CV anche `ranking.md` | `report-template.md` |
+| 8 | PDF del report con logo, intestazione, piè di pagina, link alla skill e "Pagina X di Y" | `scripts/report_to_pdf.py` |
 
 ### I tre blocchi della rubrica
 
@@ -74,9 +77,11 @@ scritta per questo progetto.
 ### Prerequisiti
 
 - Claude Code
-- Python 3.10+ con `pymupdf` (`pip install pymupdf`); in alternativa per i PDF `pypdf` o `pdftotext` (poppler)
-- Per i DOCX: `pandoc` oppure `python-docx` per il testo; LibreOffice per il rendering grafico
-- Senza LibreOffice i DOCX si valutano solo sul contenuto; il blocco grafico risulta `N/A`
+- Python 3.10+ con `pymupdf` e `python-docx` (`pip install pymupdf python-docx`)
+- `pandoc` e LibreOffice: servono per il PDF del report e per il rendering grafico dei DOCX
+- Senza pandoc o LibreOffice la valutazione resta in Markdown; senza LibreOffice i DOCX si valutano solo sul contenuto e il blocco grafico risulta `N/A`
+
+I CV reali e le valutazioni vanno nella cartella `cv/`, esclusa da git: contengono dati personali.
 
 ### Prova rapida con gli esempi inclusi
 
@@ -101,6 +106,9 @@ superflui, elenco competenze gonfiato, profilo con frasi vuote, inglese "buono" 
    tabelle A/B/C, punti di forza, rischi, domande per il colloquio e feedback sul documento.
    Sull'esempio incluso la decisione attesa è **Chiamare per verificare**: il gate resta aperto
    sull'inglese, mentre il punteggio di aderenza è alto.
+4. Accanto al CV trovi `cv_mario_rossi-valutazione.md` e `cv_mario_rossi-valutazione.pdf`. Il PDF
+   ha logo e titolo in intestazione, e nel piè di pagina il link alla skill, la data e il numero
+   di pagina.
 
 Altre prove utili:
 
@@ -119,10 +127,12 @@ produce un report per CV più `ranking.md`.
 ```
 python .claude/skills/cv-review/scripts/extract_text.py examples/cv_mario_rossi.pdf
 python .claude/skills/cv-review/scripts/render_pages.py examples/cv_mario_rossi.pdf --out render
+python .claude/skills/cv-review/scripts/report_to_pdf.py report.md --out report.pdf --cv "cv_mario_rossi.pdf"
 ```
 
 Il primo stampa il testo del CV; il secondo scrive `render/cv_mario_rossi-p1.png` e stampa
-numero di pagine, font usati, dimensioni e margini. Le cartelle `render/` e `cv_text/` sono in
+numero di pagine, font usati, dimensioni e margini; il terzo trasforma un report Markdown scritto
+con il template della skill nel PDF ufficiale. Le cartelle `render/` e `cv_text/` sono in
 `.gitignore`.
 
 ### Usare la skill in un altro progetto
@@ -140,6 +150,10 @@ oppure in `~/.claude/skills/` per averla disponibile ovunque.
   scripts/
     extract_text.py     CV -> testo
     render_pages.py     CV -> PNG per pagina + dati tipografici
+    report_to_pdf.py    report .md -> PDF con logo, intestazione, piè di pagina
+  assets/
+    logo.svg, logo.png  logo del progetto
+cv/                     CV reali e valutazioni (in .gitignore)
 examples/
   cv_mario_rossi.{pdf,docx,md}
   jd_senior_backend.md

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="200" viewBox="0 0 720 200">
+  <!-- cv-review logo: documento con spunta + wordmark -->
+  <!-- icona -->
+  <rect x="10" y="10" width="180" height="180" rx="36" fill="#1F5F73"/>
+  <!-- foglio -->
+  <path d="M58 44 h56 l30 30 v82 a8 8 0 0 1 -8 8 h-78 a8 8 0 0 1 -8 -8 v-104 a8 8 0 0 1 8 -8 z" fill="#FFFFFF"/>
+  <path d="M114 44 v30 h30 z" fill="#CFE3EA"/>
+  <!-- righe di testo -->
+  <rect x="66" y="92" width="52" height="8" rx="4" fill="#1F5F73"/>
+  <rect x="66" y="110" width="66" height="8" rx="4" fill="#9DBFCB"/>
+  <rect x="66" y="128" width="40" height="8" rx="4" fill="#9DBFCB"/>
+  <!-- spunta -->
+  <circle cx="142" cy="140" r="30" fill="#2EA66B"/>
+  <path d="M126 140 l11 11 l22 -24" fill="none" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- wordmark -->
+  <text x="222" y="112" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="76" font-weight="700" fill="#153E4C">cv-review</text>
+  <text x="226" y="156" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif" font-size="26" font-weight="400" fill="#4A6C78" letter-spacing="2">VALUTAZIONE CV PER CLAUDE CODE</text>
+</svg>

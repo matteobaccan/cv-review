@@ -2,3 +2,6 @@
 cv_text/
 render/
 __pycache__/
+
+# CV reali e relative valutazioni: dati personali, mai nel repo
+cv/

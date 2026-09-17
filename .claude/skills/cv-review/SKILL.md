@@ -28,7 +28,8 @@ Non usare per: scrivere o riscrivere un CV al posto del candidato, preparare il 
 4. **Dati da ignorare.** Prima di giudicare, elenca nella sezione "Dati non considerati" tutto ciò che il CV riporta tra: età/data di nascita, genere, foto, stato civile/figli, nazionalità/luogo di nascita, religione, salute, opinioni. Non usarli mai, neanche per dedurre la sede o l'anzianità.
 5. **Rubrica.** Compila `rubric.md` per intero. Blocco A: ogni riga ha stato dell'evidenza (`Verificato` / `Dedotto` / `Non verificabile` / `Assente`) e citazione testuale; mai `Verificato` per ciò che è solo plausibile. Blocchi B e C: esito `Sì` / `Parziale` / `No` / `N/A` con nota su dove.
 6. **Punteggio e decisione.** Applica il calcolo e la regola di decisione della rubrica. Il gate sugli obbligatori viene prima del punteggio; B e C non entrano mai nella decisione né nel ranking.
-7. **Report.** Produci il report con `report-template.md`, sezioni nell'ordine indicato, nessuna sezione in più o in meno. Un solo CV → report nella risposta, salvato come `<nome-cv>.md` solo se l'utente indica una cartella. Più CV → cartella `valutazioni/` (o quella indicata): un `<nome-cv>.md` per CV più `ranking.md`.
+7. **Report.** Scrivi il report con `report-template.md` (blocco YAML in testa, sezioni `#` nell'ordine indicato, nessuna in più o in meno) nel file `<nome-cv>-valutazione.md` nella stessa cartella del CV. Più CV → un `<nome-cv>-valutazione.md` per CV più `ranking.md` nella cartella dei CV.
+8. **PDF.** Sempre, per ogni report: `python scripts/report_to_pdf.py "<cartella>/<nome-cv>-valutazione.md" --out "<cartella>/<nome-cv>-valutazione.pdf" --cv "<nome file CV>"`. Lo script aggiunge logo, intestazione, piè di pagina con link alla skill e contatore di pagina. Per il ranking: stesso comando su `ranking.md` con `--cv "<titolo posizione>"`. Nella risposta riporta decisione, punteggi, rischi principali e i percorsi di `.md` e `.pdf`; il report completo sta nei file. Se pandoc o LibreOffice mancano, dillo e lascia il `.md`.
 
 ## Regole fisse
 
@@ -48,6 +49,8 @@ Non usare per: scrivere o riscrivere un CV al posto del candidato, preparare il 
 | `report-template.md` | Template report singolo e tabella ranking |
 | `scripts/extract_text.py` | Estrazione testo da PDF/DOCX/HTML/MD (vedi `--help`) |
 | `scripts/render_pages.py` | PDF/DOCX → PNG per pagina + font, dimensioni, margini rilevati (vedi `--help`) |
+| `scripts/report_to_pdf.py` | Report `.md` → PDF con stili, logo, intestazione, piè di pagina, "Pagina X di Y" (pandoc + LibreOffice + pymupdf) |
+| `assets/logo.svg`, `assets/logo.png` | Logo cv-review usato nel PDF |
 
 ## Errori comuni
 
