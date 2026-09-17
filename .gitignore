@@ -1,0 +1,4 @@
+# output degli script della skill cv-review
+cv_text/
+render/
+__pycache__/
