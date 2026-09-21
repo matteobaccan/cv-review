@@ -31,7 +31,7 @@ Da qui la procedura è sempre la stessa:
 | 5 | Compilazione della rubrica, tre blocchi | `rubric.md` |
 | 6 | Calcolo punteggi e decisione | `rubric.md` |
 | 7 | Report a sezioni fisse in `<nome-cv>-valutazione.md`; con più CV anche `ranking.md` | `report-template.md` |
-| 8 | PDF del report con logo, intestazione, piè di pagina, link alla skill e "Pagina X di Y" | `scripts/report_to_pdf.py` |
+| 8 | PDF del report con copertina (logo, posizione, data, nota sull'analisi IA), intestazione, piè di pagina, link alla skill e "Pagina X di Y" | `scripts/report_to_pdf.py` |
 
 ### I tre blocchi della rubrica
 
@@ -107,8 +107,9 @@ superflui, elenco competenze gonfiato, profilo con frasi vuote, inglese "buono" 
    Sull'esempio incluso la decisione attesa è **Chiamare per verificare**: il gate resta aperto
    sull'inglese, mentre il punteggio di aderenza è alto.
 4. Accanto al CV trovi `cv_mario_rossi-valutazione.md` e `cv_mario_rossi-valutazione.pdf`. Il PDF
-   ha logo e titolo in intestazione, e nel piè di pagina il link alla skill, la data e il numero
-   di pagina.
+   inizia con una copertina (logo, candidato, posizione e data, nota sull'analisi tramite IA, riferimenti
+   al progetto open source MIT); nelle pagine del report, logo e titolo in intestazione e nel piè di
+   pagina il link alla skill, la data e il numero di pagina.
 
 Altre prove utili:
 
@@ -150,7 +151,7 @@ oppure in `~/.claude/skills/` per averla disponibile ovunque.
   scripts/
     extract_text.py     CV -> testo
     render_pages.py     CV -> PNG per pagina + dati tipografici
-    report_to_pdf.py    report .md -> PDF con logo, intestazione, piè di pagina
+    report_to_pdf.py    report .md -> PDF con copertina, logo, intestazione, piè di pagina
   assets/
     logo.svg, logo.png  logo del progetto
 cv/                     CV reali e valutazioni (in .gitignore)

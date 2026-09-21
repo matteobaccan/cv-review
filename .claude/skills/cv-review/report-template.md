@@ -2,7 +2,7 @@
 
 ## Report singolo CV
 
-Sezioni fisse, in quest'ordine, nessuna in più. Compilare ogni riga; niente sezioni vuote (scrivere `Nessuno` o `N/A`). Il file inizia con il blocco YAML (titolo e sottotitolo) e usa titoli di primo livello `#` per le sezioni: è ciò che `scripts/report_to_pdf.py` si aspetta. Mantieni le righe separatrici delle tabelle come nel template: nel PDF le larghezze delle colonne seguono il numero di trattini.
+Sezioni fisse, in quest'ordine, nessuna in più. Compilare ogni riga; niente sezioni vuote (scrivere `Nessuno` o `N/A`). Il file inizia con il blocco YAML (titolo e sottotitolo: `title` e `subtitle` finiscono nella **copertina** del PDF) e usa titoli di primo livello `#` per le sezioni: è ciò che `scripts/report_to_pdf.py` si aspetta. Mantieni le righe separatrici delle tabelle come nel template: nel PDF le larghezze delle colonne seguono il numero di trattini.
 
 ```markdown
 ---

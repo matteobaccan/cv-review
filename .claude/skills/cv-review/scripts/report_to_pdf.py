@@ -5,13 +5,14 @@ Uso:
     python report_to_pdf.py <report.md> --out "<cartella>/<nome-cv>-valutazione.pdf" [--cv "Nome file CV"]
 
 Catena: Markdown -> DOCX (pandoc, con stili generati qui) -> PDF (LibreOffice) ->
-intestazione, pie' di pagina, contatore "Pagina X di Y" e link alla skill (pymupdf).
+copertina (pymupdf) + intestazione, pie' di pagina, contatore "Pagina X di Y" e link alla skill (pymupdf).
 
 Dipendenze: pandoc, LibreOffice (soffice), pymupdf, python-docx.
 Il logo e' in ../assets/logo.png (relativo a questo script).
 """
 import argparse
 import datetime as dt
+import re
 import shutil
 import subprocess
 import sys
@@ -20,6 +21,12 @@ from pathlib import Path
 
 SKILL_URL = "https://github.com/matteobaccan/cv-review"
 SKILL_URL_SHORT = "github.com/matteobaccan/cv-review"
+GUIDO_PENTA_SHORT = "github.com/GuidoPenta/galactic-CV-guide-for-developers"
+LICENSE_TEXT = "Licenza MIT \u2013 software libero"
+MONTHS_IT = [
+    "gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno",
+    "luglio", "agosto", "settembre", "ottobre", "novembre", "dicembre",
+]
 HERE = Path(__file__).resolve().parent
 LOGO = HERE.parent / "assets" / "logo.png"
 
@@ -49,6 +56,155 @@ def find_soffice() -> str:
         if shutil.which(c) or Path(c).exists():
             return c
     raise RuntimeError("LibreOffice (soffice) non trovato")
+
+
+def _get_font():
+    """Ritorna (fontname, fontfile, fitz.Font) per copertina, intestazione e pie' di pagina."""
+    import fitz
+
+    fontfile = next((str(f) for f in FONT_FILES if f.exists()), None)
+    fname = "cvr" if fontfile else "helv"
+    font = fitz.Font(fontfile=fontfile) if fontfile else fitz.Font("helv")
+    return fname, fontfile, font
+
+
+def data_italiana(d: dt.date) -> str:
+    """Data in formato italiano (es. 21 settembre 2026)."""
+    return f"{d.day} {MONTHS_IT[d.month - 1]} {d.year}"
+
+
+def parse_yaml_frontmatter(md_text: str) -> dict:
+    """Estrae i campi del front matter YAML (title, subtitle, ...) dal report Markdown."""
+    m = re.match(r"^---\s*\n(.*?)\n---\s*\n", md_text, re.DOTALL)
+    if not m:
+        return {}
+    result = {}
+    for line in m.group(1).split("\n"):
+        line = line.strip()
+        if not line or ":" not in line:
+            continue
+        key, val = line.split(":", 1)
+        val = val.strip()
+        if (val.startswith('"') and val.endswith('"')) or (val.startswith("'") and val.endswith("'")):
+            val = val[1:-1]
+        result[key.strip()] = val
+    return result
+
+
+# --------------------------------------------------------------------------- #
+# 0. copertina
+# --------------------------------------------------------------------------- #
+def create_cover_page(title: str, subtitle: str, out_path: Path) -> None:
+    """Crea la pagina di copertina (PDF) con logo e informazioni sul report.
+
+    Riporta la data di valutazione e la posizione, il logo del progetto, la nota
+    sull'analisi realizzata tramite IA (suggerimenti da verificare), lo scopo
+    (migliorare il CV seguendo la Guida Galattica per il CV di Guido Penta) e
+    il riferimento al progetto open source con licenza MIT.
+    """
+    import fitz
+
+    fname, fontfile, font_obj = _get_font()
+
+    doc = fitz.open()
+    page = doc.new_page(width=595, height=842)  # A4 in punti
+    w, h = page.rect.width, page.rect.height
+    cx = w / 2
+    lm = 2.0 * 28.35
+    rm = w - 2.0 * 28.35
+
+    def tw(text, size):
+        return font_obj.text_length(text, fontsize=size)
+
+    def centered_text(y, s, size, color=INK):
+        page.insert_text(
+            (cx - tw(s, size) / 2, y), s, fontsize=size,
+            fontname=fname, fontfile=fontfile, color=color,
+        )
+
+    def wrapped_lines(y, lines, size, color=INK, spacing=None):
+        if spacing is None:
+            spacing = size * 1.5
+        for line in lines:
+            centered_text(y, line, size, color)
+            y += spacing
+        return y
+
+    # --- Logo ---
+    y = 7 * 28.35
+    if LOGO.exists():
+        logo_px = fitz.Pixmap(str(LOGO))
+        logo_h = 1.8 * 28.35
+        logo_w = logo_h * logo_px.width / logo_px.height
+        logo_x = (w - logo_w) / 2
+        page.insert_image(fitz.Rect(logo_x, y, logo_x + logo_w, y + logo_h), pixmap=logo_px)
+        y += logo_h + 30
+    else:
+        y += 20
+
+    # --- Titolo ---
+    y += 10
+    centered_text(y, "VALUTAZIONE CURRICULUM VITAE", 24, INK)
+    y += 45
+
+    # --- Nome candidato ---
+    name = title
+    for prefix in ("Valutazione CV \u2013", "Valutazione CV -"):
+        if name.startswith(prefix):
+            name = name[len(prefix):].strip()
+            break
+    centered_text(y, name, 18, INK)
+    y += 35
+
+    # --- Posizione e data (subtitle) ---
+    centered_text(y, subtitle, 13, MUTED)
+    y += 35
+
+    # --- Divisore ---
+    page.draw_line((lm, y), (rm, y), color=RULE, width=1)
+    y += 25
+
+    # --- Nota sull'analisi AI ---
+    y += 10
+    y = wrapped_lines(y, ["NOTA SULL'ANALISI"], 12, INK, 22)
+    y += 5
+    y = wrapped_lines(y, [
+        "Questo report \u00e8 stato generato tramite Intelligenza Artificiale.",
+        "Le indicazioni contenute sono da intendersi come suggerimenti",
+        "e devono essere valutate e verificate prima di essere applicate.",
+    ], 10.5, MUTED, 16)
+    y += 20
+
+    # --- Scopo dell'analisi ---
+    y = wrapped_lines(y, [
+        "Scopo dell'analisi \u00e8 migliorare il curriculum vitae",
+        "seguendo le indicazioni della Guida Galattica per il CV",
+        "di Guido Penta.",
+    ], 10.5, INK, 16)
+    centered_text(y, GUIDO_PENTA_SHORT, 9.5, (0x1F / 255, 0x5F / 255, 0x73 / 255))
+    y += 16
+    centered_text(y, "distribuita con licenza MIT.", 10.5, INK)
+    y += 30
+
+    # --- Sezione finale: riferimenti ---
+    y_bdiv = h - 4.5 * 28.35
+    page.draw_line((lm, y_bdiv), (rm, y_bdiv), color=RULE, width=0.6)
+    y_foot = y_bdiv + 18
+    centered_text(y_foot, "Per informazioni: progetto open source, licenza MIT.", 10, MUTED)
+    y_foot += 16
+    centered_text(y_foot, SKILL_URL_SHORT, 10, INK)
+
+    link_w = tw(SKILL_URL_SHORT, 10)
+    page.insert_link({
+        "kind": fitz.LINK_URI,
+        "from": fitz.Rect(cx - link_w / 2, y_foot - 10, cx + link_w / 2, y_foot + 3),
+        "uri": SKILL_URL,
+    })
+    y_foot += 18
+    centered_text(y_foot, LICENSE_TEXT, 9, MUTED)
+
+    doc.save(str(out_path))
+    doc.close()
 
 
 # --------------------------------------------------------------------------- #
@@ -165,9 +321,7 @@ def build_reference_docx(target: Path) -> None:
 def decorate_pdf(pdf_in: Path, pdf_out: Path, cv_label: str) -> None:
     import fitz
 
-    fontfile = next((str(f) for f in FONT_FILES if f.exists()), None)
-    fname = "cvr" if fontfile else "helv"
-    measure = fitz.Font(fontfile=fontfile) if fontfile else fitz.Font("helv")
+    fname, fontfile, measure = _get_font()
 
     def width(text, size):
         return measure.text_length(text, fontsize=size)
@@ -236,6 +390,16 @@ def main() -> int:
     out.parent.mkdir(parents=True, exist_ok=True)
     cv_label = args.cv or out.stem.replace("-valutazione", "")
 
+    # Metadati per la copertina (dal front matter del report)
+    yml = parse_yaml_frontmatter(src.read_text(encoding="utf-8"))
+    if yml.get("title"):
+        title = yml["title"]
+        subtitle = yml.get("subtitle") or f"Analisi del documento \u2013 {data_italiana(dt.date.today())}"
+    else:
+        # Report senza front matter (es. ranking.md): l'etichetta e' la posizione.
+        title = cv_label
+        subtitle = f"Report generato il {data_italiana(dt.date.today())}"
+
     with tempfile.TemporaryDirectory() as tmp:
         tmpd = Path(tmp)
         try:
@@ -258,7 +422,29 @@ def main() -> int:
             if r.returncode != 0 or not raw_pdf.exists():
                 raise RuntimeError(f"LibreOffice: {r.stderr.strip() or r.stdout.strip()}")
 
-            decorate_pdf(raw_pdf, out, cv_label)
+            # Pagine del report decorate con intestazione e pie' di pagina
+            decorated_pdf = tmpd / "decorated.pdf"
+            decorate_pdf(raw_pdf, decorated_pdf, cv_label)
+
+            # Copertina + report unificati nel PDF finale
+            cover_pdf = tmpd / "cover.pdf"
+            create_cover_page(title, subtitle, cover_pdf)
+
+            import fitz
+            final = fitz.open()
+            with fitz.open(cover_pdf) as cover_doc:
+                final.insert_pdf(cover_doc)
+            with fitz.open(decorated_pdf) as report_doc:
+                final.insert_pdf(report_doc)
+            final.set_metadata({
+                "title": f"Valutazione CV \u2013 {cv_label}",
+                "author": "cv-review",
+                "subject": "Report di valutazione CV",
+                "keywords": "cv, valutazione, cv-review, claude code",
+                "creator": SKILL_URL,
+            })
+            final.save(str(out), garbage=3, deflate=True)
+            final.close()
         except Exception as e:  # noqa: BLE001
             print(f"[errore] {e}", file=sys.stderr)
             return 2
