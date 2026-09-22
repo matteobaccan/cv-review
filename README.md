@@ -154,6 +154,10 @@ job description per un Senior Backend Engineer. Il CV è volutamente imperfetto:
 superflui, elenco competenze gonfiato, profilo con frasi vuote, inglese "buono" dove la JD chiede
 "fluente".
 
+Accanto ai due file di partenza trovi già il risultato di un giro completo — valutazione,
+intervista, riscrittura — così puoi vedere come sono fatti gli output prima di produrne di tuoi.
+Li trovi raccontati in [L'esempio incluso, da dove parte e dove arriva](#lesempio-incluso-da-dove-parte-e-dove-arriva).
+
 1. Apri Claude Code nella radice del repository:
    ```
    claude
@@ -170,7 +174,7 @@ superflui, elenco competenze gonfiato, profilo con frasi vuote, inglese "buono" 
    tabelle A/B/C, punti di forza, rischi, domande per il colloquio e feedback sul documento.
    Sull'esempio incluso la decisione attesa è **Chiamare per verificare**: il gate resta aperto
    sull'inglese, mentre il punteggio di aderenza è alto.
-4. Accanto al CV trovi `cv_mario_rossi-valutazione.md` e `cv_mario_rossi-valutazione.pdf`. Il PDF
+4. Accanto al CV trovi `cv_mario_rossi-senior-backend-valutazione.md` e il suo `.pdf`. Il PDF
    inizia con una copertina (logo, candidato, posizione e data, nota sull'analisi tramite IA, riferimenti
    al progetto open source MIT); nelle pagine del report, logo e titolo in intestazione e nel piè di
    pagina il link alla skill, la data e il numero di pagina.
@@ -186,12 +190,125 @@ compila solo i blocchi B e C, senza job description.
 Ora riscrivimi il CV in una pagina per quella posizione
 ```
 avvia la fase 9: qualche domanda, una scaletta da approvare, poi
-`cv_mario_rossi-riscritto.md`, `.docx`, `.pdf` e `-riscritto-note.md`.
+`cv_mario_rossi-senior-backend-riscritto.md`, `.docx`, `.pdf` e `-riscritto-note.md`.
 
 ```
 Confronta i CV nella cartella candidati/ per la posizione in jd.md e fammi una shortlist
 ```
 produce un report per CV più `ranking.md`.
+
+### L'esempio incluso, da dove parte e dove arriva
+
+Questa è la storia dei file che trovi in `examples/`: serve a far vedere cosa fa la skill, e
+soprattutto cosa **non** fa. Mario Rossi non esiste: il CV è fittizio e anche le risposte
+dell'intervista sono state scritte come parte dell'esempio, perché senza una persona vera non
+c'era altro modo di mostrare il meccanismo. In un uso reale quelle citazioni sono frasi dette dal
+candidato.
+
+#### Il punto di partenza
+
+`cv_mario_rossi.pdf` è un CV con i difetti che si vedono più spesso, messi tutti insieme:
+
+- testata occupata da data e luogo di nascita, stato civile, figli e un segnaposto `[foto]`
+  rimasto nel PDF come testo;
+- profilo fatto di frasi non verificabili: *"team player, problem solver, orientato al risultato"*,
+  *"esperto di tutte le principali tecnologie moderne"*;
+- elenco competenze con 17 voci, di cui cinque (Go, Rust, Machine Learning, Blockchain, Scrum
+  Master) non compaiono in nessuna esperienza;
+- un solo risultato misurato in tutta la carriera, e sta nell'esperienza in corso;
+- *"Inglese (buono)"* dove l'annuncio chiede fluente;
+- nessun LinkedIn, nessuna autorizzazione al trattamento dati, nessun hobby.
+
+Sotto i difetti c'è però un candidato in target: otto anni di backend Java, tutti in ambito
+finanziario, e un ruolo attuale di Tech Lead su una piattaforma di pagamenti. È esattamente il
+caso che la skill vuole gestire bene: **un buon candidato con un CV scritto male**.
+
+#### Passi 1–8: lo screening
+
+Lo screening legge solo il documento. Risultato:
+
+| Esito | Valore |
+|---|---|
+| Gate obbligatori | `Da verificare` |
+| Aderenza (A) | 86/100 |
+| Contenuto CV (B) | 42/100 |
+| Grafica CV (C) | 79/100 |
+| Decisione | **Chiamare per verificare** |
+
+Il gate resta aperto su un solo requisito, l'inglese, e un secondo — Kubernetes in produzione — è
+`Dedotto`: il CV dice *"microservizi Spring Boot su Kubernetes"* ma non scrive mai "in produzione".
+Il contenuto del CV è da 42 su 100, eppure la decisione resta *Chiamare per verificare*: B e C
+misurano il documento, non la persona, e **non entrano nel giudizio**. È la distinzione su cui è
+costruita tutta la rubrica.
+
+#### Fase 9: l'intervista, che cambia l'aderenza
+
+Dieci domande ricavate dalle righe incerte del report, non dal CV letto a occhio. Tre righe
+cambiano stato e diventano `Dichiarato`:
+
+| Esito | Prima | Dopo |
+|---|---|---|
+| Gate | `Da verificare` | `Passa` |
+| Aderenza (A) | 86/100 | 93/100 |
+| Decisione | Chiamare per verificare | **Chiamare** |
+
+A cambiare l'aderenza è l'intervista, non la riscrittura: la persona è la stessa, ma sono emerse
+evidenze che nel documento non c'erano (l'inglese di lavoro quotidiano, i cluster EKS in produzione
+dal 2022, l'audit PCI-DSS, AWS usato davvero e non solo certificato). `Dichiarato` però resta più
+debole di `Verificato`: nessun documento lo sostiene, quindi entrambi i requisiti restano in "Da
+chiarire al colloquio".
+
+Vale la pena guardare le due risposte che **non** hanno migliorato niente, perché sono la prova che
+la skill non tira dalla parte del candidato:
+
+- sulla copertura dei test in Banca XYZ la risposta è un intervallo, *"intorno al 60-70%"*: la
+  regola dice numero esatto o nessuna cifra, quindi nel CV riscritto resta *"partendo da una
+  copertura nulla"* e il criterio A3 non si muove;
+- su Kafka la risposta è *"non l'ho mai usato"*: il requisito gradito si salva solo perché
+  l'annuncio ammette "altri sistemi di messaging" e il candidato dichiara RabbitMQ.
+
+#### Il CV riscritto
+
+Una pagina, riempimento 77%, corpo 10 pt e margini 20 mm — sopra i minimi tipografici, senza
+comprimere nulla per guadagnare righe.
+
+**Cosa esce:** i dati anagrafici e il segnaposto foto, il profilo a frasi vuote, dieci competenze
+mai usate o fuori tema, e sei anni di WebAgency Blu compressi in un bullet.
+**Cosa entra:** solo ciò che stava nel CV originale o in una risposta. La testata guadagna città e
+LinkedIn, il profilo dice il ruolo attuale e il dominio, le competenze diventano quattro etichette
+ordinate per pertinenza al ruolo, l'autorizzazione al trattamento dati compare in fondo.
+
+Sul documento riscritto si ricompilano **le voci** B e C, non i punteggi — un punteggio calcolato
+sul documento appena scritto misurerebbe la stessa checklist usata per scriverlo. Dieci voci
+cambiano esito: B1, B3, B8, B14, C7, C8 e C14 passano a `Sì`; B4, B9 e C4 da `No` a `Parziale`.
+
+#### Cosa resta scoperto, e perché
+
+Sette voci restano `Parziale` o `No`, ognuna con il motivo scritto nel file di note. Quasi sempre è
+lo stesso: *nessun dato disponibile e nulla è stato inventato*. L'obiettivo professionale e gli
+hobby non sono stati chiesti, perché il tetto di dieci domande era già speso sui requisiti
+obbligatori — ed è stato dichiarato **prima** dell'intervista, non scoperto a CV finito. Il livello
+QCER dell'inglese manca perché il candidato non ha certificazioni. Il periodo fra il 2019 e il 2021
+resta visibile nelle date e non spiegato: non è un difetto del CV, è una domanda da colloquio.
+
+Il file di note contiene anche la mappa riga per riga di dove viene ogni affermazione del CV, e
+l'elenco esplicito delle righe che vengono **solo** dall'intervista: sono quelle che nessun
+documento sostiene, cioè il punto in cui il rischio di inventare sarebbe più alto.
+
+#### I file
+
+| File | Cosa contiene |
+|---|---|
+| `cv_mario_rossi.{pdf,docx,md}` | il CV fittizio di partenza |
+| `jd_senior_backend.md` | l'annuncio usato come job description |
+| `cv_mario_rossi-senior-backend-valutazione.md` / `.pdf` | il report, aggiornato dopo l'intervista |
+| `cv_mario_rossi-senior-backend-riscritto.{md,docx,pdf}` | il CV monopagina mirato all'annuncio |
+| `cv_mario_rossi-senior-backend-riscritto-note.md` | mappa origine → riga, verifiche, cosa resta scoperto |
+
+Il report incluso è la versione **dopo** l'intervista: la riga in corsivo in testa lo dichiara e
+ogni riga cambiata porta lo stato precedente accanto alla citazione della risposta. Se lanci la
+skill da zero sul CV di partenza ti fermi al passo 8, quindi a *Chiamare per verificare*: è lo
+stesso esito, prima che l'intervista aggiunga qualcosa.
 
 ### Provare gli script da soli
 
@@ -230,7 +347,10 @@ oppure in `~/.claude/skills/` per averla disponibile ovunque.
   assets/
     logo.svg, logo.png  logo del progetto
 cv/                     CV reali e valutazioni (in .gitignore)
-examples/
+examples/                un giro completo su un CV fittizio: input, report, CV riscritto, note
   cv_mario_rossi.{pdf,docx,md}
   jd_senior_backend.md
+  cv_mario_rossi-senior-backend-valutazione.{md,pdf}
+  cv_mario_rossi-senior-backend-riscritto.{md,docx,pdf}
+  cv_mario_rossi-senior-backend-riscritto-note.md
 ```
