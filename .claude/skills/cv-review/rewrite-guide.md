@@ -123,13 +123,29 @@ Nella stessa cartella del CV originale:
 
 | File | Contenuto |
 |------|-----------|
-| `<nome-cv>-riscritto.md` | sorgente, secondo `cv-template.md` |
-| `<nome-cv>-riscritto.docx` | versione modificabile dal candidato |
-| `<nome-cv>-riscritto.pdf` | versione da inviare, una pagina |
-| `<nome-cv>-riscritto-note.md` | mappa origine → riga, cosa verificare prima di inviare, cosa resta scoperto, contenuti tagliati recuperabili |
+| `<nome-cv>-<posizione>-riscritto.md` | sorgente, secondo `cv-template.md`. Senza posizione: `<nome-cv>-riscritto.md` |
+| `<nome-cv>-<posizione>-riscritto.docx` | versione modificabile dal candidato |
+| `<nome-cv>-<posizione>-riscritto.pdf` | versione da inviare, una pagina |
+| `<nome-cv>-<posizione>-riscritto-note.md` | target per cui il CV e' stato costruito, mappa origine → riga, cosa verificare prima di inviare, cosa resta scoperto, contenuti tagliati recuperabili |
 
 Il file di note **non fa parte del CV** e non va inviato: è il documento con cui il candidato
 verifica che non sia stato inventato nulla.
+
+## 9. Il CV riscritto vale per una posizione sola
+
+Il CV prodotto è tagliato su un target: cosa sta in cima, cosa è compresso, cosa è stato tolto e
+in che lingua è scritto dipendono tutti da quella scelta. Su un annuncio diverso peggiora, e non
+per un difetto: un annuncio in inglese fa scendere la voce B2 da `Parziale` a `No`, e un ruolo con
+priorità diverse trova in fondo alla pagina ciò che dovrebbe stare in cima.
+
+Il file di note deve dirlo in testa, con il target per cui il CV è stato costruito. Se il
+candidato torna con un altro annuncio:
+
+- si rivaluta il CV **originale** contro la nuova posizione, non quello riscritto: il riscritto ha
+  già perso i contenuti che la nuova posizione potrebbe premiare;
+- se serve una nuova versione, si riparte dalla fase 9.1 con il nuovo target, riusando le risposte
+  già raccolte — quelle non scadono — e chiedendo solo ciò che manca;
+- il nuovo CV prende un nome distinto, con la posizione, come i report.
 
 ## Errori comuni
 

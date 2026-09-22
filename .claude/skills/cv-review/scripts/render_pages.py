@@ -85,12 +85,83 @@ def typography_report(doc) -> str:
     lines.append("dimensioni pt (caratteri): " + ", ".join(f"{s} ({n})" for s, n in sorted(sizes.items())))
     families = {f.split("-")[0].split(",")[0] for f in fonts}
     lines.append(f"famiglie distinte (stima): {len(families)} -> {', '.join(sorted(families))}")
+
+    groups, wanted = pages_to_inspect(doc)
+    lines.append("gruppi strutturali: " + " | ".join(as_ranges(g) for g in groups))
+    lines.append(
+        "pagine da esaminare: " + as_ranges(wanted)
+        + f" (su {doc.page_count}; una per gruppo, piu' prima e ultima). "
+        "Dichiara nel report quali pagine hai guardato."
+    )
     return "\n".join(lines)
 
 
 def fitz_rect(bbox):
     import fitz
     return fitz.Rect(*bbox)
+
+
+def page_signature(page) -> tuple:
+    """Impronta strutturale di una pagina: colonna di testo, corpo, immagini.
+
+    Due pagine con la stessa impronta hanno lo stesso impianto grafico: guardarne
+    una sola basta per compilare il blocco C.
+
+    Entra solo cio' che dipende dall'impianto: i margini laterali (dove sta la
+    colonna di testo), la dimensione del corpo dominante, la presenza di immagini.
+    Restano fuori il margine superiore e l'insieme dei corpi presenti, che dipendono
+    da dove cade il testo e da quali titoli capitano su quella pagina: sono
+    contenuto, non struttura, e spezzerebbero il raggruppamento senza motivo.
+    """
+    pt = 72 / 25.4
+    w = page.rect.width
+    rect = None
+    sizes: Counter = Counter()
+    for b in page.get_text("dict")["blocks"]:
+        if b.get("type") != 0:
+            continue
+        for line in b["lines"]:
+            for s in line["spans"]:
+                if not s["text"].strip():
+                    continue
+                sizes[round(s["size"], 1)] += len(s["text"])
+                r = fitz_rect(s["bbox"])
+                rect = r if rect is None else rect | r
+    if rect is None:
+        return ("vuota",)
+
+    def mm5(v):  # margini arrotondati a 5 mm: sotto e' rumore di impaginazione
+        return round(v / pt / 5) * 5
+
+    return (
+        mm5(rect.x0), mm5(w - rect.x1),
+        sizes.most_common(1)[0][0],
+        bool(page.get_images()),
+    )
+
+
+def pages_to_inspect(doc):
+    """Raggruppa le pagine per impronta e indica quali vanno guardate.
+
+    Una per gruppo, piu' sempre la prima e l'ultima: la prima porta testata e
+    contatti, l'ultima e' dove si vede se il documento finisce mezzo vuoto (C9).
+    """
+    groups: dict = {}
+    for i, page in enumerate(doc, 1):
+        groups.setdefault(page_signature(page), []).append(i)
+    ordered = sorted(groups.values(), key=lambda g: g[0])
+    wanted = {g[0] for g in ordered} | {1, doc.page_count}
+    return ordered, sorted(wanted)
+
+
+def as_ranges(pages) -> str:
+    out, start, prev = [], pages[0], pages[0]
+    for n in pages[1:] + [None]:
+        if n != prev + 1:
+            out.append(str(start) if start == prev else f"{start}-{prev}")
+            start = n
+        prev = n
+    return ", ".join(out)
 
 
 def main() -> int:

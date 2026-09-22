@@ -4,6 +4,13 @@
 
 Sezioni fisse, in quest'ordine, nessuna in più. Compilare ogni riga; niente sezioni vuote (scrivere `Nessuno` o `N/A`). Il file inizia con il blocco YAML (titolo e sottotitolo: `title` e `subtitle` finiscono nella **copertina** del PDF) e usa titoli di primo livello `#` per le sezioni: è ciò che `scripts/report_to_pdf.py` si aspetta. Mantieni le righe separatrici delle tabelle come nel template: nel PDF le larghezze delle colonne seguono il numero di trattini.
 
+**Nome del file:** `<nome-cv>-<posizione>-valutazione.md` (`<posizione>` abbreviata, minuscola, con trattini), oppure `<nome-cv>-valutazione.md` se non c'è una posizione di riferimento. Lo stesso candidato si valuta su più annunci: senza la posizione nel nome, il secondo report sovrascrive il primo.
+
+**Due regole che valgono per ogni report:**
+
+- **Requisiti dedotti.** Se i requisiti non vengono da una JD reale, dichiaralo in "Requisiti usati". Se poi è proprio un requisito dedotto a far fallire il gate, scrivi accanto alla decisione quale sarebbe l'esito trattandolo come gradito: un candidato non si scarta su un requisito scritto da chi valuta.
+- **Pagine esaminate.** Nella riga "Rendering" del blocco C elenca le pagine che hai davvero guardato e perché sono sufficienti (di norma quelle indicate da `render_pages.py`). Un blocco C compilato su pagine non viste non è tracciabile.
+
 ```markdown
 ---
 title: "Valutazione CV – <Nome Cognome>"
@@ -16,7 +23,7 @@ lang: it
 **In una riga:** <profilo in ≤ 30 parole: ruolo attuale, anni pertinenti, punti forti, rischio principale>
 
 # Requisiti usati
-Fonte: <JD `file` | requisiti dedotti dalla richiesta>. Pesi: <standard | modificati: ...>.
+Fonte: <JD `file` | JD da URL: <indirizzo>, recuperata il <data> | requisiti dedotti dalla richiesta>. Pesi: <standard | modificati: ...>.
 - Obbligatori: <elenco>
 - Graditi: <elenco>
 
@@ -46,7 +53,7 @@ Fonte: <JD `file` | requisiti dedotti dalla richiesta>. Pesi: <standard | modifi
 **Punteggio B:** <calcolo>
 
 # C. Grafica e tipografia
-Rendering: <`render/<file>-p1.png` ... | nessuno: blocco N/A>
+Rendering: <N pagine; esaminate le pagine <elenco> (indicate da `render_pages.py`: una per gruppo strutturale, più prima e ultima) | nessuno: blocco N/A>
 | # | Voce | Esito | Nota (dove) |
 |------|-------------------|-----------|-----------------------------------------------|
 | C1 | Allineamento a sinistra | Sì / Parziale / No / N/A | |
@@ -84,9 +91,7 @@ tutte dentro sezioni già previste:
 
 Una risposta può **peggiorare** il quadro: un requisito `Non verificabile` che il candidato
 dichiara di non possedere diventa `Assente` e fa fallire il gate. L'esito va scritto come viene,
-mai ammorbidito. Se il requisito che fa fallire il gate è stato dedotto e non letto da una JD
-reale, dichiaralo in "Requisiti usati" insieme alla decisione che si otterrebbe trattandolo come
-gradito: la scelta spetta a chi seleziona.
+mai ammorbidito.
 
 ## Ranking di più CV
 
