@@ -17,11 +17,19 @@ Ogni riga del blocco A porta uno stato e una citazione testuale del CV.
 | Stato | Significato |
 |-------|-------------|
 | `Verificato` | Scritto esplicitamente nel CV, in un'esperienza, formazione o certificazione datata |
+| `Dichiarato` | Affermato dal candidato in risposta a una domanda, ma non presente nel CV. Vale solo se la risposta è diretta e riferita a lui; va citata come le righe del CV |
 | `Dedotto` | Plausibile da ciò che è scritto, ma non esplicito (es. skill elencata ma mai usata in un'esperienza; "piattaforma su Kubernetes" senza "in produzione") |
 | `Non verificabile` | Il CV non dice nulla in merito e non c'è base per dedurlo |
 | `Assente` | Il CV contraddice il requisito o mostra chiaramente che manca (es. richiesto inglese fluente, dichiarato "scolastico") |
 
 Regola: in dubbio tra `Verificato` e `Dedotto`, scegli `Dedotto`.
+
+`Dichiarato` non si usa nello screening ordinario, dove l'unica fonte è il documento: compare solo
+quando il candidato ha risposto direttamente, cioè nella fase di riscrittura (`rewrite-guide.md`) o
+dopo un colloquio di verifica. È più forte di `Dedotto`, perché non è un'inferenza di chi valuta ma
+un'affermazione della persona, e più debole di `Verificato`, perché nessun documento datato la
+sostiene. Nel report va sempre accompagnato dalla citazione della risposta e dalla data in cui è
+stata data.
 
 ### Convenzioni per i casi ricorrenti
 
@@ -32,6 +40,7 @@ Regola: in dubbio tra `Verificato` e `Dedotto`, scegli `Dedotto`.
 | Date con soli anni | Conta la differenza secca tra gli anni (2016–2019 = 3); "oggi" = anno corrente. Scrivi "±1 anno per esperienza" accanto al totale |
 | Ruolo di lead / manager | Conta come esperienza tecnica se l'esperienza cita le tecnologie usate; se cita solo attività di gestione, conta per A4 ma non per A1/A2 |
 | Skill richiesta presente solo come certificazione | `Dedotto` per A2; `Verificato` per A5 |
+| Requisito coperto da una risposta del candidato | `Dichiarato`, con citazione della risposta; il criterio si ricalcola e il report dice quali righe sono cambiate |
 | Risultati (A3) distribuiti in modo disomogeneo | Valuta l'insieme della carriera pesando di più le esperienze recenti: risultati misurati solo nell'ultima esperienza → livello 3 |
 
 ## Blocco A – Aderenza al ruolo
@@ -42,9 +51,12 @@ Una riga per ogni requisito obbligatorio della JD, con stato e citazione.
 
 | Esito gate | Condizione |
 |------------|------------|
-| `Passa` | tutti `Verificato` o `Dedotto` |
+| `Passa` | tutti `Verificato`, `Dichiarato` o `Dedotto` |
 | `Da verificare` | almeno un `Non verificabile`, nessun `Assente` |
 | `Non passa` | almeno un `Assente` |
+
+Un requisito coperto solo da `Dichiarato` fa passare il gate, ma resta una domanda da porre: va
+sempre in "Da chiarire al colloquio", perché è l'unico stato che nessun documento sostiene.
 
 Se la JD non distingue obbligatori e graditi, considera obbligatori quelli marcati "richiesto/required/must" o con soglia numerica ("5+ anni"); gli altri sono graditi. Scrivilo nel report.
 

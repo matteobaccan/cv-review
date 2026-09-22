@@ -26,7 +26,7 @@ Fonte: <JD `file` | requisiti dedotti dalla richiesta>. Pesi: <standard | modifi
 # A0. Gate requisiti obbligatori
 | Requisito | Stato | Evidenza (citazione dal CV) |
 |----------------|----------|-----------------------------------|
-| ... | Verificato / Dedotto / Non verificabile / Assente | "..." |
+| ... | Verificato / Dichiarato / Dedotto / Non verificabile / Assente | "..." |
 
 # A. Aderenza al ruolo
 | # | Criterio | Livello 0–4 | Peso | Evidenza (citazione dal CV) |
@@ -68,6 +68,25 @@ Rendering: <`render/<file>-p1.png` ... | nessuno: blocco N/A>
 # Feedback sul documento (per il candidato)
 - <max 5 correzioni concrete tratte dalle righe B/C con esito No/Parziale, in ordine di impatto>, oppure `Nessuno`
 ```
+
+## Report aggiornato dopo l'intervista (fase 9)
+
+Se la fase di riscrittura raccoglie risposte che coprono righe del blocco A, il report **non si
+riscrive da capo**: si aggiorna quello esistente, sempre con le stesse sezioni. Tre sole aggiunte,
+tutte dentro sezioni già previste:
+
+1. Sotto il blocco in testa, una riga in corsivo con la data dell'intervista e quante righe hanno
+   cambiato stato:
+   `*Aggiornato il <data> dopo l'intervista di riscrittura (fase 9): <N> righe hanno cambiato stato. Le righe marcate `Dichiarato` sono affermazioni dirette del candidato, non evidenze documentali.*`
+2. Nelle righe cambiate, lo stato `Dichiarato` con l'evidenza nella forma
+   `Era <stato precedente>. <citazione della risposta> (intervista, <data>)`.
+3. Nel calcolo del punteggio A, il valore precedente fra parentesi e il motivo del cambio.
+
+Una risposta può **peggiorare** il quadro: un requisito `Non verificabile` che il candidato
+dichiara di non possedere diventa `Assente` e fa fallire il gate. L'esito va scritto come viene,
+mai ammorbidito. Se il requisito che fa fallire il gate è stato dedotto e non letto da una JD
+reale, dichiaralo in "Requisiti usati" insieme alla decisione che si otterrebbe trattandolo come
+gradito: la scelta spetta a chi seleziona.
 
 ## Ranking di più CV
 
